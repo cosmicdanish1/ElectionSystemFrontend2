@@ -1,11 +1,10 @@
 import React from 'react';
+import CandidateManagement from '../components/admin/CandidateManagement';
 
 const CommitteeDashboard = () => {
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold">Committee Dashboard</h1>
-      <p>Welcome, Committee Member! Here you can manage elections and candidates.</p>
-      {/* Placeholder for future content */}
+      <CandidateManagement />
     </div>
   );
 };

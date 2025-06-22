@@ -41,7 +41,13 @@ export function LoginFormDemo() {
     try {
       const user = await loginUser(formData);
       login(user);
-      navigate('/');
+      alert('Login successful!');
+
+      if (user.role === 'committee') {
+        navigate('/committee-dashboard');
+      } else {
+        navigate('/voter-dashboard');
+      }
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
     } finally {
@@ -141,3 +147,5 @@ const LabelInputContainer = ({
     {children}
   </div>
 );
+
+export default LoginFormDemo;

@@ -7,6 +7,9 @@ import CommitteeDashboard from './pages/CommitteeDashboard';
 import { NavbarMain } from './components/layout/NavbarMain';
 import './App.css';
 import { useState } from 'react';
+import ProfilePage from './pages/ProfilePage';
+import RegistrationPage from './pages/RegistrationPage';
+import ElectionDetailsPage from './pages/ElectionDetailsPage';
 
 function App() {
   return (
@@ -56,6 +59,9 @@ function AppContent() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/voter-dashboard" element={<VoterDashboard />} />
           <Route path="/committee-dashboard" element={<CommitteeDashboard />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/registration" element={<RegistrationPage />} />
+          <Route path="/elections/:electionid" element={<ElectionDetailsPage />} />
         </Routes>
       </div>
     </div>

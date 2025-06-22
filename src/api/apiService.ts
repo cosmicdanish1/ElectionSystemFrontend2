@@ -33,6 +33,7 @@ export interface User {
   role: string;
   gender?: string;
   date_of_birth?: string;
+  vid?: number; // voter id, optional
 }
 
 interface AuthResponse {
