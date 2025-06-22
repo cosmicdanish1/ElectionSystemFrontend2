@@ -1,0 +1,32 @@
+:root {
+    --glass-blur: 4px;
+    --glass-tint: rgba(255, 255, 255, 0.2);
+    --glass-radius: 20px;
+  }
+  
+  .glassBox {
+    border-radius: var(--glass-radius);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  
+  .glassBox::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--glass-tint);
+    border-radius: inherit;
+    z-index: 1;
+  }
+  
+  .glassBox::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    filter: url(#glass-distortion);
+  }
+  

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body {
+
+    background-color: white;
+}
+
+.glassDiv {
+    position: absolute;
+    -webkit-backdrop-filter: blur(var(--frost-blur));
+    -webkit-filter: url("#glass-distortion");
+    /* No filter or mask here now */
+}
+
