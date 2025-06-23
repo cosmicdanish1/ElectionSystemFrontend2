@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavbarMain } from '../components/layout/NavbarMain';
+// import { NavbarMain } from '../components/layout/NavbarMain';
 import { ContainerTextFlip } from '../components/ui/container-text-flip';
 import { TimelineMain } from '../components/layout/TimelineMain';
 import Footer from '../components/layout/Footer';
@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <div className="flex items-center justify-center min-h-screen text-center p-10">
         <div>
-          <NavbarMain />
+          {/* <NavbarMain /> */}
           <h1 className="text-6xl font-extrabold">
             <span className="text-black">
               The Ultimate Platform for

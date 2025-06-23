@@ -1,4 +1,3 @@
-
 import { cn } from "../../lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import {
@@ -128,7 +127,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         <a
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
+          className="relative px-4 py-2 text-neutral-600 "
           key={`link-${idx}`}
           href={item.link}
         >
@@ -242,14 +241,14 @@ export const NavbarLogo = () => {
         width={30}
         height={30}
       />
-      <span className="font-medium text-black dark:text-white">ElectionSys</span>
+      <span className="font-medium text-black ">ElectionSys</span>
     </a>
   );
 };
 
 export const NavbarButton = ({
   href,
-  as: Tag = "a",
+  as: Tag = undefined,
   children,
   className,
   variant = "primary",
@@ -276,13 +275,25 @@ export const NavbarButton = ({
       "bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
   };
 
-  return (
-    <Tag
-      href={href || undefined}
-      className={cn(baseStyles, variantStyles[variant], className)}
-      {...props}
-    >
-      {children}
-    </Tag>
-  );
+  if (href) {
+    return (
+      <a
+        href={href}
+        className={cn(baseStyles, variantStyles[variant], className)}
+        {...props}
+      >
+        {children}
+      </a>
+    );
+  } else {
+    return (
+      <button
+        type="button"
+        className={cn(baseStyles, variantStyles[variant], className)}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
 };

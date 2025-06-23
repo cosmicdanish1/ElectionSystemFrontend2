@@ -10,13 +10,14 @@ import {
   MobileNavMenu,
 } from "../../components/ui/resizable-navbar";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
-export function NavbarMain() {
+export function NavbarMain({ onLoginClick, onSignupClick, isHomePage }: { onLoginClick?: () => void, onSignupClick?: () => void, isHomePage?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -27,31 +28,60 @@ export function NavbarMain() {
     <div className="fixed top-0 left-0 z-50 w-full">
       <Navbar className="">
         {/* Desktop Navigation */}
-        <NavBody className="hidden md:flex">
+        <NavBody className="flex">
           <NavbarLogo />
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
-                <span className="text-white font-medium">Welcome, {user?.name}</span>
-                <Link to="/profile">
-                  <NavbarButton variant="secondary">Profile</NavbarButton>
-                </Link>
-                <Link to="/registration">
-                  <NavbarButton variant="secondary">Registration</NavbarButton>
-                </Link>
-                <NavbarButton onClick={handleLogout} variant="secondary">Logout</NavbarButton>
+                {/* Profile Avatar Dropdown */}
+                <ProfileDropdown user={user} />
+                <button
+                  className="px-4 py-2 rounded-md bg-white text-red-600 font-bold border border-gray-200 shadow hover:bg-red-600 hover:text-white transition"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
               </>
             ) : (
               <>
-                <NavbarButton variant="secondary" href="/login">Login</NavbarButton>
-                <NavbarButton variant="primary" href="/signup">Signup</NavbarButton>
+                {isHomePage ? (
+                  <>
+                    <NavbarButton
+                      className="drop-shadow text-black"
+                      onClick={() => navigate('/login', { state: { background: location } })}
+                    >
+                      Login
+                    </NavbarButton>
+                    <NavbarButton
+                      variant="primary"
+                      onClick={() => navigate('/signup', { state: { background: location } })}
+                    >
+                      Signup
+                    </NavbarButton>
+                  </>
+                ) : (
+                  <>
+                    <NavbarButton
+                      className="drop-shadow text-black"
+                      href="/login"
+                    >
+                      Login
+                    </NavbarButton>
+                    <NavbarButton
+                      variant="primary"
+                      href="/signup"
+                    >
+                      Signup
+                    </NavbarButton>
+                  </>
+                )}
               </>
             )}
           </div>
         </NavBody>
 
         {/* Mobile Navigation */}
-        <MobileNav className="flex md:hidden">
+        {/* <MobileNav className="flex md:hidden">
           <MobileNavHeader>
             <NavbarLogo />
             <MobileNavToggle
@@ -121,8 +151,43 @@ export function NavbarMain() {
               )}
             </div>
           </MobileNavMenu>
-        </MobileNav>
+        </MobileNav> */}
       </Navbar>
+    </div>
+  );
+}
+
+function ProfileDropdown({ user }: { user: any }) {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const initial = user?.name ? user.name.charAt(0).toUpperCase() : '?';
+
+  return (
+    <div className="relative">
+      <button
+        className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg focus:outline-none border-2 border-white shadow hover:ring-2 hover:ring-blue-300 transition"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {initial}
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-200">
+          <button
+            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50"
+            onClick={() => { setOpen(false); navigate('/profile'); }}
+          >
+            Profile
+          </button>
+          {user?.role === 'voter' && (
+            <button
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50"
+              onClick={() => { setOpen(false); navigate('/registration'); }}
+            >
+              Registration
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

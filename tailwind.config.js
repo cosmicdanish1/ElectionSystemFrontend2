@@ -28,6 +28,15 @@ module.exports = {
       boxShadow: {
         input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
       },
+      colors: {
+        receipt: {
+          bg: '#ffffff',
+          text: '#222222',
+          accent: '#2563eb', // blue-600
+          success: '#16a34a', // green-600
+          warning: '#eab308', // yellow-600
+        },
+      },
     },
   },
   plugins: [require('tailwind-scrollbar-hide')],

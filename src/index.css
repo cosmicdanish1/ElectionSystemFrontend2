@@ -5,3 +5,17 @@
 body {
   background-color: white;
 }
+
+/* Force supported colors for html2canvas in the receipt area */
+#receipt-area, #receipt-area * {
+  background: #fff !important;
+  color: #222 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+#receipt-area button {
+  color: #fff !important;
+  background-color: #2563eb !important;
+  font-weight: 600;
+}

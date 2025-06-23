@@ -40,7 +40,20 @@ export function LoginFormDemo() {
 
     try {
       const user = await loginUser(formData);
-      login(user);
+      // Fetch voter info if user is a voter
+      let updatedUser = user;
+      if (user.role === 'voter') {
+        try {
+          const voterRes = await fetch(`/api/voters/by-user/${user.id}`);
+          if (voterRes.ok) {
+            const voterData = await voterRes.json();
+            updatedUser = { ...user, vid: voterData.vid };
+          }
+        } catch (fetchErr) {
+          // Optionally handle fetch error (e.g., log it)
+        }
+      }
+      login(updatedUser);
       alert('Login successful!');
 
       if (user.role === 'committee') {
