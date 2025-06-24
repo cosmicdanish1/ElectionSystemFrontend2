@@ -6,6 +6,7 @@ import html2canvas from 'html2canvas';
 import { Document, Packer, Paragraph, TextRun, ImageRun } from 'docx';
 import { QRCodeCanvas } from 'qrcode.react';
 import logo from '../../assets/images/logo.png';
+import ReactConfetti from 'react-confetti';
 
 interface Election {
   electionid: number;
@@ -46,6 +47,7 @@ const ElectionDetails: React.FC<Props> = ({ election, candidates, onClose }) => 
   const [docSuccess, setDocSuccess] = useState(false);
   const [pngLoading, setPngLoading] = useState(false);
   const [pngSuccess, setPngSuccess] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   console.log('ElectionDetails component received election prop:', election);
 
@@ -89,6 +91,8 @@ const ElectionDetails: React.FC<Props> = ({ election, candidates, onClose }) => 
       if (!res.ok) throw new Error(data.error || 'Failed to vote');
       setSuccess('Vote cast successfully!');
       setVoteStatus({ voted: true, vote: { candidateid } });
+      setShowSuccessPopup(true);
+      setTimeout(() => setShowSuccessPopup(false), 3000);
       setTimeout(() => setShowReceipt(true), 600); // Show receipt after animation
     } catch (err: any) {
       setError(err.message || 'Error casting vote');
@@ -277,13 +281,21 @@ const ElectionDetails: React.FC<Props> = ({ election, candidates, onClose }) => 
   console.log('[ElectionDetails] Rendering with candidates:', candidates);
 
   return (
-    <div className="bg-white rounded shadow p-6 mt-4">
+    <div className="bg-white rounded shadow p-6 mt-4 relative">
+      {showSuccessPopup && (
+        <>
+          <ReactConfetti width={window.innerWidth} height={window.innerHeight} numberOfPieces={200} recycle={false} />
+          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-8 py-4 rounded-lg shadow-lg text-xl font-bold animate-bounce">
+            Vote Successful!
+          </div>
+        </>
+      )}
       <button className="float-right text-gray-500 hover:text-black" onClick={onClose}>&times;</button>
       <h3 className="text-xl font-bold mb-2">{election.title}</h3>
       <div className="mb-4 text-sm text-gray-600">{election.type} | {election.location_region} | {election.date.slice(0, 10)}</div>
       <h4 className="font-semibold mb-2">Candidates</h4>
-      <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* Candidate Cards */}
+      <div className="flex flex-row gap-6 items-start">
+        {/* Candidate Cards (left) */}
         <div className="flex flex-row gap-4 flex-1">
           {candidates.map(candidate => (
             <div
@@ -305,15 +317,22 @@ const ElectionDetails: React.FC<Props> = ({ election, candidates, onClose }) => 
             </div>
           ))}
         </div>
-        {/* Drop Area */}
-        <div
-          className={`w-56 h-48 flex items-center justify-center rounded-lg border-4 transition-colors duration-200 ${isOver ? 'bg-green-300 border-green-600' : 'bg-green-100 border-green-400'} ${voteStatus?.voted ? 'opacity-50' : ''}`}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
+        {/* Drop Area Card (right) */}
+        <motion.div
+          className="bg-white rounded-lg shadow-lg p-4 flex items-center justify-center w-56 h-48"
+          initial={false}
+          animate={isOver ? { scale: 1.1, boxShadow: '0 0 32px 8px #22c55e' } : { scale: 1, boxShadow: '0 0 0 0 transparent' }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-          <span className="text-lg font-semibold text-gray-700 select-none">{voteStatus?.voted ? 'Vote Registered' : 'Drag & Drop To Vote'}</span>
-        </div>
+          <div
+            className={`w-full h-full flex items-center justify-center rounded-lg border-4 transition-colors duration-200 ${isOver ? 'bg-green-300 border-green-600' : 'bg-green-100 border-green-400'} ${voteStatus?.voted ? 'opacity-50' : ''}`}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+          >
+            <span className="text-lg font-semibold text-gray-700 select-none">{voteStatus?.voted ? 'Vote Registered' : 'Drop Here To Vote'}</span>
+          </div>
+        </motion.div>
       </div>
       {voteStatus?.voted && (
         <div className="text-green-700 font-semibold mb-2 mt-4">You have already voted in this election.</div>
