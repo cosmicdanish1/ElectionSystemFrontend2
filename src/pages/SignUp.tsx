@@ -6,6 +6,7 @@ import { cn } from "../lib/utils";
 import { registerUser } from "../api/apiService";
 import type { UserRegistrationData } from "../api/apiService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 type FormData = Omit<UserRegistrationData, 'name'>;
 
@@ -19,7 +20,6 @@ export function SignupFormDemo() {
     date_of_birth: "",
     role: "voter",
   });
-  const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
@@ -34,19 +34,17 @@ export function SignupFormDemo() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     // Basic validation
     if (!formData.email || !formData.password || !formData.firstname) {
-      setError("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.");
       setLoading(false);
       return;
     }
 
     try {
       const registeredUser = await registerUser(formData);
-      console.log('Data from backend after registration:', registeredUser);
-      alert('Registration successful!');
+      toast.success('Registration successful!');
       
       // Redirect based on the role
       if (registeredUser.role === 'committee') {
@@ -55,7 +53,7 @@ export function SignupFormDemo() {
         navigate('/voter-dashboard');
       }
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      toast.error(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -71,8 +69,6 @@ export function SignupFormDemo() {
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
-        {error && <div className="p-2 mb-4 text-center text-sm text-white bg-red-500 rounded-md">{error}</div>}
-
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>

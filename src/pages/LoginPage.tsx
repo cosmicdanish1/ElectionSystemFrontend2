@@ -7,6 +7,7 @@ import { loginUser } from "../api/apiService";
 import type { UserLoginData } from "../api/apiService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { toast } from "sonner";
 
 export function LoginFormDemo() {
   const [formData, setFormData] = React.useState<UserLoginData>({
@@ -14,7 +15,6 @@ export function LoginFormDemo() {
     password: "",
     role: "voter",
   });
-  const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -30,10 +30,9 @@ export function LoginFormDemo() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     if (!formData.email || !formData.password) {
-      setError("Please enter both email and password.");
+      toast.error("Please enter both email and password.");
       setLoading(false);
       return;
     }
@@ -54,7 +53,7 @@ export function LoginFormDemo() {
         }
       }
       login(updatedUser);
-      alert('Login successful!');
+      toast.success('Login successful!');
 
       if (user.role === 'committee') {
         navigate('/committee-dashboard');
@@ -62,7 +61,7 @@ export function LoginFormDemo() {
         navigate('/voter-dashboard');
       }
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      toast.error(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -88,8 +87,6 @@ export function LoginFormDemo() {
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
-        {error && <div className="p-2 mb-4 text-center text-sm text-white bg-red-500 rounded-md">{error}</div>}
-
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input id="email" placeholder="you@example.com" type="email" value={formData.email} onChange={handleChange} />

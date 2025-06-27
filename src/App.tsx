@@ -13,6 +13,8 @@ import ElectionDetailsPage from './pages/ElectionDetailsPage';
 import VoterElectionsPage from './pages/VoterElectionsPage';
 import CreateElectionPage from './pages/CreateElectionPage';
 import { AnimatePresence, motion } from 'framer-motion';
+import NotFoundPage from './pages/NotFoundPage';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
@@ -42,6 +44,7 @@ function AppContent() {
 
   return (
     <div className="App">
+      <Toaster position="top-center" />
       <NavbarMain />
       <div className="main-content pt-16">
         <AnimatePresence mode="wait">
@@ -63,6 +66,7 @@ function AppContent() {
               <Route path="/voter-elections" element={<VoterElectionsPage />} />
               <Route path="/elections/:electionid" element={<ElectionDetailsPage />} />
               <Route path="/create-election" element={<CreateElectionPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </motion.div>
         </AnimatePresence>
